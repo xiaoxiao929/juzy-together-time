@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="zh-TW">
+<head>
+  <meta charset="utf-8">
+  <title>揪是要你 🤝</title>
+  <link rel="stylesheet" href="/static/styles.css">
+  <style>
+    body {
+      font-family: "Segoe UI", "Noto Sans TC", sans-serif;
+      background:	#F0F0F0	;
+    }
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+    }
+    section {
+      background: #fff;
+      padding: 20px;
+      margin-bottom: 24px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,.05);
+    }
+    h2 {
+      margin-top: 0;
+    }
+    input, select, button, textarea {
+      padding: 8px;
+      margin: 6px 0;
+    }
+    button {
+      background: #4f46e5;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover {
+      opacity: .9;
+    }
+    .result {
+      background: #f1f1f1;
+      padding: 10px;
+      margin-top: 10px;
+      min-height: 50px;
+    }
+  </style>
+</head>
+
+<body>
+<div class="container">
+  <h1>揪是要你 🤝</h1>
+
+  <!-- 👤 建立使用者 -->
+  <section>
+    <h2>👤 建立使用者</h2>
+    <input id="user-name" placeholder="請輸入你的名字">
+    <button onclick="createUser()">建立使用者</button>
+    <div id="user-created" class="result"></div>
+  </section>
+
+  <!-- 🔄 使用者狀態 -->
+  <section>
+    <h2>🔄 使用者目前狀態</h2>
+    <input id="status-user-id" placeholder="使用者 ID">
+    <select id="user-status">
+      <option value="閒置">閒置</option>
+      <option value="忙碌">忙碌</option>
+      <option value="外出">外出</option>
+    </select>
+    <button onclick="updateStatus()">更新狀態</button>
+    <div id="status-result" class="result"></div>
+  </section>
+
+  <!-- 📅 新增行程 -->
+  <section>
+    <h2>📅 新增行程</h2>
+    <input id="ev-owner" placeholder="使用者 ID">
+    <input id="ev-title" placeholder="行程標題（如：打工）">
+    <select id="ev-category">
+      <option value="課程">課程</option>
+      <option value="打工">打工</option>
+      <option value="社團">社團</option>
+      <option value="吃飯">吃飯</option>
+      <option value="看電影">看電影</option>
+      <option value="出去玩">出去玩</option>
+      <option value="其他">其他</option>
+    </select><br>
+    <input id="ev-start" type="datetime-local">
+    <input id="ev-end" type="datetime-local">
+    <input id="ev-color" placeholder="#rrggbb (可不填)">
+    <button onclick="createMyEvent()">新增行程</button>
+    <div id="ev-created" class="result"></div>
+  </section>
+
+  <!-- 🔍 行程搜尋 -->
+  <section>
+    <h2>🔍 行程搜尋</h2>
+    <input id="search-user-ids" placeholder="使用者 ID（可多個 1,2）">
+    <input id="search-title" placeholder="標題關鍵字">
+    <select id="search-category">
+      <option value="">全部分類</option>
+      <option value="課程">課程</option>
+      <option value="打工">打工</option>
+      <option value="社團">社團</option>
+      <option value="吃飯">吃飯</option>
+      <option value="看電影">看電影</option>
+      <option value="出去玩">出去玩</option>
+      <option value="其他">其他</option>
+    </select>
+    <input id="search-date" type="date">
+    <button onclick="searchEvents()">搜尋</button>
+    <div id="events-list" class="result"></div>
+  </section>
+
+  <!-- ⏰ 共同空閒 -->
+  <section>
+    <h2>⏰ 查詢共同空閒時間</h2>
+    <input id="ft-ids" placeholder="使用者 ID（1,2）">
+    <input id="ft-date" type="date">
+    <button onclick="freeTime()">查詢</button>
+    <div id="ft-result" class="result"></div>
+  </section>
+
+  <!-- 📩 發送邀約 -->
+  <section>
+    <h2>📩 發送邀約</h2>
+    <input id="inv-from" placeholder="邀請者 ID">
+    <input id="inv-to" placeholder="被邀請者 ID">
+    <input id="inv-event" placeholder="行程 ID（可空）">
+    <textarea id="inv-msg" placeholder="邀請留言"></textarea><br>
+    <button onclick="sendInvite()">送出邀約</button>
+    <div id="inv-result" class="result"></div>
+  </section>
+
+  <!-- 🔔 通知 -->
+  <section>
+    <h2>🔔 通知中心</h2>
+    <input id="not-user" placeholder="使用者 ID">
+    <button onclick="getNotifications()">查看通知</button>
+    <div id="not-list" class="result"></div>
+  </section>
+
+  <!-- ⏱️ 打工時數 -->
+  <section>
+    <h2>⏱️ 本月打工時數</h2>
+    <input id="work-user" placeholder="使用者 ID">
+    <button onclick="getWorkHours()">查詢</button>
+    <div id="work-result" class="result"></div>
+  </section>
+
+</div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>
