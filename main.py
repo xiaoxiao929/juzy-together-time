@@ -5,6 +5,9 @@ from fastapi.responses import HTMLResponse
 from sqlalchemy.orm import Session
 from typing import List
 from datetime import datetime, date
+from free_time.weekday import WeekdayStrategy
+from free_time.weekend import WeekendStrategy
+
 
 import models
 import schemas
@@ -109,3 +112,16 @@ def work_hours(user_id: int, db: Session = Depends(get_db)):
         "user_id": user_id,
         "hours": crud.calculate_month_work_hours(db, user_id)
     }
+
+
+@app.post("/free-times")
+def free_times(req: schemas.FreeTimeRequest, db: Session = Depends(get_db)):
+    target_date = datetime.strptime(req.date, "%Y-%m-%d").date()
+
+    if target_date.weekday() >= 5:
+        strategy = WeekendStrategy()
+    else:
+        strategy = WeekdayStrategy()
+
+    return crud.find_free_times(db, req.user_ids, req.date, strategy)
+

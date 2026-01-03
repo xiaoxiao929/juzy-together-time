@@ -1,6 +1,9 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import and_
 from datetime import datetime, date
+from free_time.weekday import WeekdayStrategy
+from free_time.weekend import WeekendStrategy
+
 
 import models
 import schemas
@@ -110,10 +113,17 @@ def search_events(
 # =========================
 # Free Time
 # =========================
-def find_free_times(db: Session, user_ids: list[int], date_str: str):
-    base_date = datetime.strptime(date_str, "%Y-%m-%d")
-    day_start = base_date.replace(hour=8, minute=0)
-    day_end = base_date.replace(hour=22, minute=0)
+def find_free_times(db, user_ids, date_str, strategy):
+    target_date = datetime.strptime(date_str, "%Y-%m-%d").date()
+
+    day_start, day_end = strategy.get_day_range(target_date)
+
+    events = db.query(models.Event).filter(
+        models.Event.owner_id.in_(user_ids),
+        models.Event.start < day_end,
+        models.Event.end > day_start
+    ).all()
+    ...
 
     events = db.query(models.Event).filter(
         models.Event.owner_id.in_(user_ids),
